@@ -4,9 +4,9 @@
 void displayMainMenu() {
         printf("\n\t*** Store Management ***\n");
     	printf("=========================================\n");
-        printf("1. Quan ly danh muc\n");
-        printf("2. Quan ly san pham\n");
-        printf("0. Thoat\n");
+        printf("[1]. Quan ly danh muc\n");
+        printf("[2]. Quan ly san pham\n");
+        printf("[0]. Thoat\n");
         printf("=========================================\n");
         printf("Chon mot tuy chon: ");
 }
@@ -38,6 +38,9 @@ void categaryManagement(category categories[], int *categoryCount) {
     		case 2:
     			addCategory(categories, categoryCount);
     			break;
+    		case 3:
+                editCategory(categories, *categoryCount);
+                break;
 		}
 	}while(choice!=0);
 }
@@ -54,12 +57,13 @@ void displayCategoryList(category categories[], int categoryCount) {
     }
     printf("\n\t*** Hien thi danh muc ***\n");
     printf("=========================================================================================================\n");
-    printf("| %-10s | %-25s |\n", "CategoryId", "CategoryName");
+    printf("| %-5s | %-10s | %-25s |\n", "STT", "CategoryId", "CategoryName");
     printf("=========================================================================================================\n");
-    int i; 
-    for (i = 0; i < categoryCount; ++i) {
-        printf("| %-10s | %-25s |\n", categories[i].CategoryId, categories[i].CategoryName);
+	int i; 
+    for (i = 0; i < categoryCount; i++) {
+        printf("| %-5d | %-10s | %-25s |\n", i + 1, categories[i].CategoryId, categories[i].CategoryName);
     }
+
     printf("=========================================================================================================\n");
 }
 void addCategory(category categories[], int *categoryCount) {
@@ -96,6 +100,37 @@ void addCategory(category categories[], int *categoryCount) {
         categories[*categoryCount] = newCategory;
         (*categoryCount)++; 
         printf("Them danh muc thanh cong!\n");
+    }
+}
+void editCategory(category categories[], int categoryCount) {
+    if (categoryCount == 0) {
+        printf("\nDanh sach danh muc trong. Khong co gi de sua!\n");
+        return;
+    }
+    char targetId[10];
+    int found = 0;
+    printf("\n\t*** Sua danh muc ***\n");
+    printf("=========================\n");
+    printf("Nhap ID danh muc muon sua: ");
+    scanf("%s", targetId);
+    getchar(); 
+	int i; 
+    for (i = 0; i < categoryCount; i++) {
+        if (strcmp(categories[i].CategoryId, targetId) == 0) {
+            found = 1;
+            printf("\nThong tin hien tai cua danh muc:\n");
+            printf("ID: %s\n", categories[i].CategoryId);
+            printf("Ten: %s\n", categories[i].CategoryName);
+            printf("\nNhap thong tin moi cho danh muc:\n");
+            printf("Nhap ten moi: ");
+            scanf("%s", categories[i].CategoryName);
+            getchar();
+            printf("\nSua thong tin danh muc thanh cong!\n");
+            return;
+        }
+    }
+    if (!found) {
+        printf("\nLoi: ID danh muc '%s' khong ton tai.\n", targetId);
     }
 }
 void displayProductMenu() {
