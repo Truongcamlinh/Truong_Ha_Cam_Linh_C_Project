@@ -1,0 +1,17 @@
+# depslib dependency file v1.0
+1735503928 source:d:\rkei_c\project_be\datastore.c
+
+1735768631 source:d:\rkei_c\project_be\function.c
+	<stdio.h>
+	"function.h"
+
+1735768937 d:\rkei_c\project_be\function.h
+	"dataType.h"
+
+1735504270 d:\rkei_c\project_be\datatype.h
+	<stdbool.h>
+
+1735505282 source:d:\rkei_c\project_be\main.c
+	<stdio.h>
+	"function.h"
+

@@ -1,5 +1,8 @@
 #include <stdio.h>
-#include "function.h" 
+#include <string.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include "function.h"
 
 void displayMainMenu() {
         printf("\n\t*** Store Management ***\n");
@@ -13,6 +16,7 @@ void displayMainMenu() {
 void categaryManagement(category categories[], int *categoryCount) {
 	int choice;
 	do{
+        system("cls");
     	printf("\n\t*** Quan ly danh muc ***\n");
         printf("=========================================================================================================\n");
         printf("| %-3s | %-75s |\n", "ID", "Hanh dong");
@@ -29,7 +33,8 @@ void categaryManagement(category categories[], int *categoryCount) {
         printf("=========================================================================================================\n");
         printf("Chon mot tuy chon: ");
         scanf("%d", &choice);
-    	
+
+        system("cls");
     	switch (choice)
     	{
     		case 1:
@@ -40,6 +45,17 @@ void categaryManagement(category categories[], int *categoryCount) {
     			break;
     		case 3:
                 editCategory(categories, *categoryCount);
+                break;
+            case 4:
+                deleteCategory(categories, categoryCount);
+                break;
+            case 5:
+                searchCategoryByName(categories, *categoryCount);
+                break;
+            case 6:
+                sortCategoriesByName(categories, *categoryCount);
+            default:
+                printf("Lua chon khong hop le. Vui long nhap lai.\n");
                 break;
 		}
 	}while(choice!=0);
@@ -59,12 +75,15 @@ void displayCategoryList(category categories[], int categoryCount) {
     printf("=========================================================================================================\n");
     printf("| %-5s | %-10s | %-25s |\n", "STT", "CategoryId", "CategoryName");
     printf("=========================================================================================================\n");
-	int i; 
+	int i;
     for (i = 0; i < categoryCount; i++) {
         printf("| %-5d | %-10s | %-25s |\n", i + 1, categories[i].CategoryId, categories[i].CategoryName);
     }
 
     printf("=========================================================================================================\n");
+    getchar();
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
 }
 void addCategory(category categories[], int *categoryCount) {
     printf("\n\t*** Add Category ***\n");
@@ -84,7 +103,7 @@ void addCategory(category categories[], int *categoryCount) {
             found = 0;
             printf("Nhap CategoryId: ");
             scanf("%s", newCategory.CategoryId);
-            getchar(); 
+            getchar();
             int j;
             for (j = 0; j < *categoryCount; j++) {
                 if (strcmp(categories[j].CategoryId, newCategory.CategoryId) == 0) {
@@ -98,9 +117,11 @@ void addCategory(category categories[], int *categoryCount) {
         scanf("%s", newCategory.CategoryName);
         getchar();
         categories[*categoryCount] = newCategory;
-        (*categoryCount)++; 
+        (*categoryCount)++;
         printf("Them danh muc thanh cong!\n");
     }
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
 }
 void editCategory(category categories[], int categoryCount) {
     if (categoryCount == 0) {
@@ -113,8 +134,8 @@ void editCategory(category categories[], int categoryCount) {
     printf("=========================\n");
     printf("Nhap ID danh muc muon sua: ");
     scanf("%s", targetId);
-    getchar(); 
-	int i; 
+    getchar();
+	int i;
     for (i = 0; i < categoryCount; i++) {
         if (strcmp(categories[i].CategoryId, targetId) == 0) {
             found = 1;
@@ -126,12 +147,142 @@ void editCategory(category categories[], int categoryCount) {
             scanf("%s", categories[i].CategoryName);
             getchar();
             printf("\nSua thong tin danh muc thanh cong!\n");
+            getchar();
             return;
         }
     }
     if (!found) {
         printf("\nLoi: ID danh muc '%s' khong ton tai.\n", targetId);
     }
+    getchar();
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
+}
+void deleteCategory(category categories[], int *categoryCount) {
+    char targetId[10];
+    int found = -1;
+    printf("\n\t*** Xoa danh muc ***\n");
+    printf("=========================\n");
+    printf("Nhap ID danh muc muon xoa: ");
+    scanf("%s", targetId);
+    getchar();
+    for (int i = 0; i < *categoryCount; i++) {
+        if (strcmp(categories[i].CategoryId, targetId) == 0) {
+            found = i;
+            break;
+        }
+    }
+    if (found == -1) {
+        printf("\nLoi: ID danh muc '%s' khong ton tai.\n", targetId);
+        return;
+    }
+
+    char confirm;
+    printf("\nDanh muc voi ID '%s' da ton tai. Ban co chac chan muon xoa? (Y/N): ", targetId);
+    scanf(" %c", &confirm);
+    getchar();
+
+    if (confirm == 'Y' || confirm == 'y') {
+        for (int i = found; i < *categoryCount - 1; i++) {
+            categories[i] = categories[i + 1];
+        }
+        (*categoryCount)--;
+        printf("\nXoa danh muc voi ID '%s' thanh cong!\n", targetId);
+    } else {
+        printf("\nHuy thao tac xoa danh muc.\n");
+    }
+    getchar();
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
+}
+void sortCategoriesByName(category categories[], int categoryCount) {
+    if (categoryCount == 0) {
+        printf("\nDanh sach danh muc trong. Khong co gi de sap xep!\n");
+        return;
+    }
+    int choice;
+    printf("\n\t*** Sap xep danh sach danh muc theo ten ***\n");
+    printf("=========================================\n");
+    printf("1. Sap xep tang dan theo ten\n");
+    printf("2. Sap xep giam dan theo ten\n");
+    printf("0. Thoat\n");
+    printf("=========================================\n");
+    printf("Chon mot tuy chon: ");
+    scanf("%d", &choice);
+
+    if (choice == 0) {
+        printf("\nThoat sap xep.\n");
+        return;
+    }
+    for (int i = 0; i < categoryCount - 1; i++) {
+        for (int j = i + 1; j < categoryCount; j++) {
+            int condition = 0;
+
+            if (choice == 1) {
+                condition = strcmp(categories[i].CategoryName, categories[j].CategoryName) > 0;
+            } else if (choice == 2) {
+                condition = strcmp(categories[i].CategoryName, categories[j].CategoryName) < 0;
+            }
+            if (condition) {
+                category temp = categories[i];
+                categories[i] = categories[j];
+                categories[j] = temp;
+            }
+        }
+    }
+    printf("\nSap xep danh sach danh muc thanh cong!\n");
+    displayCategoryList(categories, categoryCount);
+    getchar();
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
+}
+int containsIndependentWord(const char *haystack, const char *needle) {
+    const char *current = haystack;
+    size_t needleLength = strlen(needle);
+
+    while ((current = strstr(current, needle)) != NULL) {
+        char before = (current == haystack) ? ' ' : *(current - 1);
+        char after = *(current + needleLength);
+
+        if (isspace(before) || ispunct(before)) {
+            if (isspace(after) || ispunct(after) || after == '\0') {
+                return 1;
+            }
+        }
+        current += needleLength;
+    }
+    return 0;
+}
+void searchCategoryByName(category categories[], int categoryCount) {
+    if (categoryCount == 0) {
+        printf("\nDanh sach danh muc trong. Khong co gi de tim kiem!\n");
+        return;
+    }
+    char searchTerm[50];
+    int foundCount = 0;
+    printf("\n\t*** Tim kiem danh muc theo ten ***\n");
+    printf("Nhap chuoi can tim kiem: ");
+    getchar();
+    fgets(searchTerm, sizeof(searchTerm), stdin);
+    searchTerm[strcspn(searchTerm, "\n")] = '\0';
+    printf("\nKet qua tim kiem cho '%s':\n", searchTerm);
+    printf("=====================================================================================\n");
+    printf("| %-5s | %-10s | %-25s |\n", "STT", "CategoryID", "CategoryName");
+    printf("=====================================================================================\n");
+    for (int i = 0; i < categoryCount; i++) {
+        if (containsIndependentWord(categories[i].CategoryName, searchTerm)) {
+            foundCount++;
+            printf("| %-5d | %-10s | %-25s |\n", foundCount, categories[i].CategoryId, categories[i].CategoryName);
+        }
+    }
+    if (foundCount == 0) {
+        printf("\nKhong tim thay danh muc nao phu hop voi chuoi '%s'.\n", searchTerm);
+    } else {
+        printf("=====================================================================================\n");
+    }
+    getchar();
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
 }
 void displayProductMenu() {
     printf("\nQuan ly san pham:\n");
