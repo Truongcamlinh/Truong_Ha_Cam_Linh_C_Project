@@ -27,8 +27,7 @@ void categaryManagement(category categories[], int *categoryCount) {
         printf("| %-3d | %-75s |\n", 4, "Xoa danh muc (Neu co san pham trong danh muc, xoa ca san pham)");
         printf("| %-3d | %-75s |\n", 5, "Tim kiem danh muc theo ten (Chi can chua chuoi nhap vao)");
         printf("| %-3d | %-75s |\n", 6, "Sap xep danh sach danh muc theo ten");
-        printf("| %-3d | %-75s |\n", 7, "Kiem tra du lieu nhap cho danh muc");
-        printf("| %-3d | %-75s |\n", 8, "Luu tru du lieu");
+        printf("| %-3d | %-75s |\n", 7, "Luu tru du lieu");
         printf("| %-3d | %-75s |\n", 0, "Thoat");
         printf("=========================================================================================================\n");
         printf("Chon mot tuy chon: ");
@@ -92,42 +91,75 @@ void addCategory(category categories[], int *categoryCount) {
     printf("Nhap so luong danh muc can them: ");
     scanf("%d", &numCategoriesToAdd);
     getchar();
-
-	int i;
+    int i;
     for (i = 0; i < numCategoriesToAdd; i++) {
         category newCategory;
-        int found;
+        int isValid = 0;
 
         printf("\nThem danh muc so %d\n", *categoryCount + 1);
-        do {
-            found = 0;
-            printf("Nhap CategoryId: ");
+        while (!isValid) {
+            isValid = 1;
+            printf("Nhap CategoryId (toi da 9 ky tu): ");
             scanf("%s", newCategory.CategoryId);
             getchar();
-            int j;
-            for (j = 0; j < *categoryCount; j++) {
+            if (strlen(newCategory.CategoryId) == 0 || strlen(newCategory.CategoryId) > 9) {
+                printf("Loi: CategoryId khong hop le. Vui long nhap lai.\n");
+                isValid = 0;
+                continue;
+            }
+            for (int j = 0; j < *categoryCount; j++) {
                 if (strcmp(categories[j].CategoryId, newCategory.CategoryId) == 0) {
                     printf("Loi: CategoryId '%s' da ton tai. Vui long nhap ID khac.\n", newCategory.CategoryId);
-                    found = 1;
+                    isValid = 0;
                     break;
                 }
             }
-        } while (found);
-        printf("Nhap CategoryName: ");
-        scanf("%s", newCategory.CategoryName);
-        getchar();
+        }
+        isValid = 0;
+        while (!isValid) {
+            isValid = 1;
+            printf("Nhap CategoryName (toi da 9 ky tu): ");
+            scanf("%s", newCategory.CategoryName);
+            getchar();
+
+            if (strlen(newCategory.CategoryName) == 0 || strlen(newCategory.CategoryName) > 9) {
+                printf("Loi: CategoryName khong hop le. Vui long nhap lai.\n");
+                isValid = 0;
+                continue;
+            }
+            for (int j = 0; j < *categoryCount; j++) {
+                if (strcmp(categories[j].CategoryName, newCategory.CategoryName) == 0) {
+                    printf("Loi: CategoryName '%s' da ton tai. Vui long nhap ID khac.\n", newCategory.CategoryName);
+                    isValid = 0;
+                    break;
+                }
+            }
+        }
         categories[*categoryCount] = newCategory;
         (*categoryCount)++;
         printf("Them danh muc thanh cong!\n");
+        saveCategoriesToFile(categories, *categoryCount);
     }
     printf("\n--- Nhan phim bat ky de quay lai ---\n");
     getchar();
 }
 void editCategory(category categories[], int categoryCount) {
     if (categoryCount == 0) {
+        getchar();
         printf("\nDanh sach danh muc trong. Khong co gi de sua!\n");
+        printf("\n--- Nhan phim bat ky de quay lai ---\n");
+        getchar();
         return;
     }
+    printf("\n\t*** Hien thi danh muc ***\n");
+    printf("=========================================================================================================\n");
+    printf("| %-5s | %-10s | %-25s |\n", "STT", "CategoryId", "CategoryName");
+    printf("=========================================================================================================\n");
+
+    for (int i = 0; i < categoryCount; i++) {
+        printf("| %-5d | %-10s | %-25s |\n", i + 1, categories[i].CategoryId, categories[i].CategoryName);
+    }
+    printf("=========================================================================================================\n");
     char targetId[10];
     int found = 0;
     printf("\n\t*** Sua danh muc ***\n");
@@ -135,30 +167,70 @@ void editCategory(category categories[], int categoryCount) {
     printf("Nhap ID danh muc muon sua: ");
     scanf("%s", targetId);
     getchar();
-	int i;
-    for (i = 0; i < categoryCount; i++) {
+    int categoryIndex = -1;
+    for (int i = 0; i < categoryCount; i++) {
         if (strcmp(categories[i].CategoryId, targetId) == 0) {
-            found = 1;
-            printf("\nThong tin hien tai cua danh muc:\n");
-            printf("ID: %s\n", categories[i].CategoryId);
-            printf("Ten: %s\n", categories[i].CategoryName);
-            printf("\nNhap thong tin moi cho danh muc:\n");
-            printf("Nhap ten moi: ");
-            scanf("%s", categories[i].CategoryName);
-            getchar();
-            printf("\nSua thong tin danh muc thanh cong!\n");
-            getchar();
-            return;
+            categoryIndex = i;
+            break;
         }
     }
-    if (!found) {
+    if (categoryIndex == -1) {
         printf("\nLoi: ID danh muc '%s' khong ton tai.\n", targetId);
+        return;
     }
-    getchar();
+    category *editedCategory = &categories[categoryIndex];
+    printf("\nThong tin hien tai cua danh muc:\n");
+    printf("ID: %s\n", editedCategory->CategoryId);
+    printf("Ten: %s\n", editedCategory->CategoryName);
+
+    int isValid = 0;
+    while (!isValid) {
+        isValid = 1;
+        char newCategoryName[10];
+        printf("Nhap ten moi cho danh muc (toi da 9 ky tu): ");
+        scanf("%s", newCategoryName);
+        getchar();
+        if (strlen(newCategoryName) == 0 || strlen(newCategoryName) > 9) {
+            printf("Loi: CategoryName khong hop le. Vui long nhap lai.\n");
+            isValid = 0;
+            continue;
+        }
+        for (int j = 0; j < categoryCount; j++) {
+            if (j != categoryIndex && strcmp(categories[j].CategoryName, newCategoryName) == 0) {
+                printf("Loi: Ten danh muc '%s' da ton tai. Vui long nhap ten khac.\n", newCategoryName);
+                isValid = 0;
+                break;
+            }
+        }
+        if (isValid) {
+            strcpy(editedCategory->CategoryName, newCategoryName);
+            printf("\nSua thong tin danh muc thanh cong!\n");
+            saveCategoriesToFile(categories, categoryCount);
+        }
+    }
     printf("\n--- Nhan phim bat ky de quay lai ---\n");
     getchar();
 }
+
+
 void deleteCategory(category categories[], int *categoryCount) {
+    if (*categoryCount == 0) {
+        getchar();
+        printf("\nDanh sach danh muc trong. Khong co gi de sua!\n");
+        printf("\n--- Nhan phim bat ky de quay lai ---\n");
+        getchar();
+        return;
+    }
+    printf("\n\t*** Hien thi danh muc ***\n");
+    printf("=========================================================================================================\n");
+    printf("| %-5s | %-10s | %-25s |\n", "STT", "CategoryId", "CategoryName");
+    printf("=========================================================================================================\n");
+	int i;
+    for (i = 0; i < *categoryCount; i++) {
+        printf("| %-5d | %-10s | %-25s |\n", i + 1, categories[i].CategoryId, categories[i].CategoryName);
+    }
+
+    printf("=========================================================================================================\n");
     char targetId[10];
     int found = -1;
     printf("\n\t*** Xoa danh muc ***\n");
@@ -187,6 +259,7 @@ void deleteCategory(category categories[], int *categoryCount) {
             categories[i] = categories[i + 1];
         }
         (*categoryCount)--;
+        saveCategoriesToFile(categories, *categoryCount);
         printf("\nXoa danh muc voi ID '%s' thanh cong!\n", targetId);
     } else {
         printf("\nHuy thao tac xoa danh muc.\n");
@@ -284,6 +357,32 @@ void searchCategoryByName(category categories[], int categoryCount) {
     printf("\n--- Nhan phim bat ky de quay lai ---\n");
     getchar();
 }
+void saveCategoriesToFile(category categories[], int categoryCount) {
+    FILE *file = fopen("categories.txt", "w");
+    if (file == NULL) {
+        printf("Loi: Khong the mo file de ghi.\n");
+        return;
+    }
+    for (int i = 0; i < categoryCount; i++) {
+        fprintf(file, "%s,%s\n", categories[i].CategoryId, categories[i].CategoryName);
+    }
+    fclose(file);
+    printf("Luu danh muc vao file thanh cong!\n");
+}
+void loadCategoriesFromFile(category categories[], int *categoryCount) {
+    FILE *file = fopen("categories.txt", "r");
+    if (file == NULL) {
+        printf("File danh muc khong ton tai. Khoi tao danh sach rong.\n");
+        return;
+    }
+    *categoryCount = 0;
+    while (fscanf(file, "%[^,],%[^\n]\n", categories[*categoryCount].CategoryId, categories[*categoryCount].CategoryName) != EOF) {
+        (*categoryCount)++;
+    }
+    fclose(file);
+    printf("Nap danh muc tu file thanh cong!\n");
+}
+
 void displayProductMenu() {
     printf("\nQuan ly san pham:\n");
     printf("1. Hien thi danh sach san pham\n");

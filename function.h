@@ -10,4 +10,6 @@ void sortCategoriesByName(category categories[], int categoryCount);
 int containsIndependentWord(const char *haystack, const char *needle);
 void searchCategoryByName(category categories[], int categoryCount);
 void displayProductMenu();
+void saveCategoriesToFile(category categories[], int categoryCount);
+void loadCategoriesFromFile(category categories[], int *categoryCount);
 
