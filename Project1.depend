@@ -18,3 +18,22 @@
 	<stdio.h>
 	"function.h"
 
+1735874027 source:c:\users\admin\downloads\truong_ha_cam_linh_c_project-main (4)\truong_ha_cam_linh_c_project-main\datastore.c
+
+1735874027 source:c:\users\admin\downloads\truong_ha_cam_linh_c_project-main (4)\truong_ha_cam_linh_c_project-main\main.c
+	<stdio.h>
+	"function.h"
+
+1735874027 c:\users\admin\downloads\truong_ha_cam_linh_c_project-main (4)\truong_ha_cam_linh_c_project-main\function.h
+	"dataType.h"
+
+1735874027 c:\users\admin\downloads\truong_ha_cam_linh_c_project-main (4)\truong_ha_cam_linh_c_project-main\datatype.h
+	<stdbool.h>
+
+1735875808 source:c:\users\admin\downloads\truong_ha_cam_linh_c_project-main (4)\truong_ha_cam_linh_c_project-main\function.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<ctype.h>
+	"function.h"
+

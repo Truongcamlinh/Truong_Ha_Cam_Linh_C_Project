@@ -5,6 +5,7 @@
 #include "function.h"
 
 void displayMainMenu() {
+        system("cls");
         printf("\n\t*** Store Management ***\n");
     	printf("=========================================\n");
         printf("[1]. Quan ly danh muc\n");
@@ -53,6 +54,12 @@ void categaryManagement(category categories[], int *categoryCount) {
                 break;
             case 6:
                 sortCategoriesByName(categories, *categoryCount);
+                break;
+            case 7:
+                saveCategoriesToFile(categories, *categoryCount);
+                break;
+            case 0:
+                break;
             default:
                 printf("Lua chon khong hop le. Vui long nhap lai.\n");
                 break;
@@ -216,7 +223,7 @@ void editCategory(category categories[], int categoryCount) {
 void deleteCategory(category categories[], int *categoryCount) {
     if (*categoryCount == 0) {
         getchar();
-        printf("\nDanh sach danh muc trong. Khong co gi de sua!\n");
+        printf("\nDanh sach danh muc trong. Khong co gi de xoa!\n");
         printf("\n--- Nhan phim bat ky de quay lai ---\n");
         getchar();
         return;
@@ -246,6 +253,8 @@ void deleteCategory(category categories[], int *categoryCount) {
     }
     if (found == -1) {
         printf("\nLoi: ID danh muc '%s' khong ton tai.\n", targetId);
+        printf("\n--- Nhan phim bat ky de quay lai ---\n");
+        getchar();
         return;
     }
 
@@ -264,13 +273,14 @@ void deleteCategory(category categories[], int *categoryCount) {
     } else {
         printf("\nHuy thao tac xoa danh muc.\n");
     }
-    getchar();
     printf("\n--- Nhan phim bat ky de quay lai ---\n");
     getchar();
 }
 void sortCategoriesByName(category categories[], int categoryCount) {
     if (categoryCount == 0) {
+        getchar();
         printf("\nDanh sach danh muc trong. Khong co gi de sap xep!\n");
+        getchar();
         return;
     }
     int choice;
@@ -305,9 +315,6 @@ void sortCategoriesByName(category categories[], int categoryCount) {
     }
     printf("\nSap xep danh sach danh muc thanh cong!\n");
     displayCategoryList(categories, categoryCount);
-    getchar();
-    printf("\n--- Nhan phim bat ky de quay lai ---\n");
-    getchar();
 }
 int containsIndependentWord(const char *haystack, const char *needle) {
     const char *current = haystack;
@@ -328,7 +335,9 @@ int containsIndependentWord(const char *haystack, const char *needle) {
 }
 void searchCategoryByName(category categories[], int categoryCount) {
     if (categoryCount == 0) {
+        getchar();
         printf("\nDanh sach danh muc trong. Khong co gi de tim kiem!\n");
+        getchar();
         return;
     }
     char searchTerm[50];
@@ -353,12 +362,11 @@ void searchCategoryByName(category categories[], int categoryCount) {
     } else {
         printf("=====================================================================================\n");
     }
-    getchar();
     printf("\n--- Nhan phim bat ky de quay lai ---\n");
     getchar();
 }
 void saveCategoriesToFile(category categories[], int categoryCount) {
-    FILE *file = fopen("categories.txt", "w");
+    FILE *file = fopen("categories.dat", "w");
     if (file == NULL) {
         printf("Loi: Khong the mo file de ghi.\n");
         return;
@@ -367,10 +375,13 @@ void saveCategoriesToFile(category categories[], int categoryCount) {
         fprintf(file, "%s,%s\n", categories[i].CategoryId, categories[i].CategoryName);
     }
     fclose(file);
+    getchar();
     printf("Luu danh muc vao file thanh cong!\n");
+    printf("\n--- Nhan phim bat ky de quay lai ---\n");
+    getchar();
 }
 void loadCategoriesFromFile(category categories[], int *categoryCount) {
-    FILE *file = fopen("categories.txt", "r");
+    FILE *file = fopen("categories.dat", "r");
     if (file == NULL) {
         printf("File danh muc khong ton tai. Khoi tao danh sach rong.\n");
         return;
@@ -380,7 +391,6 @@ void loadCategoriesFromFile(category categories[], int *categoryCount) {
         (*categoryCount)++;
     }
     fclose(file);
-    printf("Nap danh muc tu file thanh cong!\n");
 }
 
 void displayProductMenu() {
