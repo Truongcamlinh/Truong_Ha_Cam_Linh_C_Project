@@ -37,3 +37,22 @@
 	<ctype.h>
 	"function.h"
 
+1736134552 source:c:\users\khanh\downloads\truong_ha_cam_linh_c_project-main\truong_ha_cam_linh_c_project-main\datastore.c
+
+1736141981 source:c:\users\khanh\downloads\truong_ha_cam_linh_c_project-main\truong_ha_cam_linh_c_project-main\main.c
+	<stdio.h>
+	"function.h"
+
+1736138778 c:\users\khanh\downloads\truong_ha_cam_linh_c_project-main\truong_ha_cam_linh_c_project-main\function.h
+	"dataType.h"
+
+1736134552 c:\users\khanh\downloads\truong_ha_cam_linh_c_project-main\truong_ha_cam_linh_c_project-main\datatype.h
+	<stdbool.h>
+
+1736140162 source:c:\users\khanh\downloads\truong_ha_cam_linh_c_project-main\truong_ha_cam_linh_c_project-main\function.c
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<ctype.h>
+	"function.h"
+

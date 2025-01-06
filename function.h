@@ -13,3 +13,9 @@ void displayProductMenu();
 void saveCategoriesToFile(category categories[], int categoryCount);
 void loadCategoriesFromFile(category categories[], int *categoryCount);
 
+
+void addProduct(product *products, int *productCount);
+void displayProductList(product products[], int categoryCount);
+void addProduct(product *products, int *productCount);
+void saveProductsToFile(product *products, int productCount);
+void loadProductsFromFile(product *products, int *productCount);
